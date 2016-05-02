@@ -52,7 +52,7 @@ int main()
 
 	fstream a;
 	fstream b;
-	//byle jaka zmiana
+	//byle jaka zmiana2
 
 
 
