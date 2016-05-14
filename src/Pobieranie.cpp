@@ -28,7 +28,7 @@ Pobieranie::~Pobieranie()
 {
 	// TODO Auto-generated destructor stub
 }
-void Pobieranie::pobieraniePliku(char *adresURL,const char nazwaPliku[100])
+void Pobieranie::pobieranie_pliku(char *adresURL,const char nazwaPliku[100])
 {
 
 	CURL *curl;

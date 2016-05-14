@@ -12,6 +12,7 @@
 #include <cstring>
 #include <list>
 #include <vector>
+#include <string>
 using namespace std;
 class Parsowanie
 {
@@ -20,7 +21,9 @@ private:
 public:
 	Parsowanie();
 	virtual ~Parsowanie();
-	vector<Waluta> Parsuj_Plik(std::string nazwa_pliku_do_sparsowania,std::string nazwa_pliku_do_zapisu, std::list<string> lista_walut);
+	void parsuj_plik(std::string nazwa_pliku_do_sparsowania,std::string nazwa_pliku_do_zapisu, std::list<string>& lista_walut,std::list<string> &lista_znalezionych_walut,std::list<string>&lista_nieznalezionych_walut, std::vector<Waluta>& tablica_walut);
+	void pobierz_waluty_z_pliku(list<string> lista_walut, vector<Waluta>& tablica_walut);
+	int znajdz_jedna_walute(fstream& plik, list<string>& lista_szukanych_walut, list<string>& lista_nieznalezionych_walut,list<string>& lista_znalezionych_walut, vector<Waluta> &wektor_walut);
 };
 
 #endif /* PARSOWANIE_H_ */

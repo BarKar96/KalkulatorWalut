@@ -12,7 +12,7 @@ class Pobieranie {
 public:
 	Pobieranie();
 	virtual ~Pobieranie();
-	void pobieraniePliku(char *adresURL,const char nazwaPliku[100]);
+	void pobieranie_pliku(char *adresURL,const char nazwaPliku[100]);
 
 };
 

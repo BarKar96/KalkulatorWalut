@@ -32,8 +32,10 @@ int main()
 
 	Parsowanie w;
 	vector<Waluta> tablica_walut;
+	list<string> lista_znalezionych_walut;
+	list<string> lista_nieznalezionych_walut=lista_walut;
 
-	tablica_walut=w.Parsuj_Plik("plik.txt","plik2.txt",lista_walut);
+	w.parsuj_plik("plik.txt","plik2.txt",lista_walut,lista_znalezionych_walut, lista_nieznalezionych_walut,tablica_walut);
 	for (unsigned int i=0; i<tablica_walut.size(); i++)
 	{
 		cout << tablica_walut[i].get_nazwa_waluty() <<" "<< tablica_walut[i].get_kurs_sredni()<<endl;
