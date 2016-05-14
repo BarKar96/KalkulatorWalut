@@ -7,20 +7,26 @@
 
 #ifndef WALUTA_H_
 #define WALUTA_H_
+#include <iostream>
+#include <string>
 
 namespace std {
 
 class Waluta
 {
 private:
-	string nazwa_waluty;
+	std::string nazwa_waluty;
 	int przelicznik;
-	string kod_waluty;
+	std::string kod_waluty;
 	float kurs_sredni;
 public:
-	Waluta();
+	Waluta(std::string nazwa_waluty, int przelicznik, std::string kod_waluty, float kurs_sredni);
 	virtual ~Waluta();
 	void wczytaj_walute(std::string nazwa_waluty, int data);
+	std::string get_nazwa_waluty();
+	int get_przelicznik();
+	std::string get_kod_waluty();
+	float get_kurs_sredni();
 };
 
 } /* namespace std */
