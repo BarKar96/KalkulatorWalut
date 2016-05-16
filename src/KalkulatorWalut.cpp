@@ -19,27 +19,21 @@ using namespace std;
 int main()
 {
 	list<string> lista_walut;
-	lista_walut.push_back("kuna (Chorwacja)");
-	lista_walut.push_back("dolar australijski");
-	lista_walut.push_back("euro");
-	lista_walut.push_back("funt szterling");
-	lista_walut.push_back("korona czeska");
-	lista_walut.push_back("korona szwedzka");
-	lista_walut.push_back("lira turecka");
-	lista_walut.push_back("rubel rosyjski");
-	lista_walut.push_back("hrywna (Ukraina)");
-	lista_walut.push_back("jen (Japonia)");
-
+	lista_walut.push_back("USD");
+	lista_walut.push_back("GBP");
+	lista_walut.push_back("EUR");
+	lista_walut.push_back("NOK");
 	Parsowanie w;
 	vector<Waluta> tablica_walut;
-	list<string> lista_znalezionych_walut;
-	list<string> lista_nieznalezionych_walut=lista_walut;
+	list<string> kody_walut_pom=lista_walut;
 
-	w.parsuj_plik("plik.txt","plik2.txt",lista_walut,lista_znalezionych_walut, lista_nieznalezionych_walut,tablica_walut);
+	std::cout<<"lista walut pom"<<kody_walut_pom.size()<<endl;
+	w.parsuj_plik("plik.txt", kody_walut_pom, tablica_walut);
+	w.zapis_do_pliku_z_dnia("wyniki.txt", tablica_walut);
 	for (unsigned int i=0; i<tablica_walut.size(); i++)
 	{
 		cout << tablica_walut[i].get_nazwa_waluty() <<" "<< tablica_walut[i].get_kurs_sredni()<<endl;
 	}
-	cout << "!!!Hello World!!!!";
+	cout << "!!!Program has ended with exit 0!!!!";
 	return 0;
 }
