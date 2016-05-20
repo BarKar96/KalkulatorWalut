@@ -27,6 +27,7 @@ public:
 	int get_przelicznik();
 	std::string get_kod_waluty();
 	float get_kurs_sredni();
+	float srednia_wartosc();
 };
 
 } /* namespace std */

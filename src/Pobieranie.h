@@ -7,13 +7,13 @@
 
 #ifndef POBIERANIE_H_
 #define POBIERANIE_H_
-
+#include <string>
 class Pobieranie {
 public:
 	Pobieranie();
 	virtual ~Pobieranie();
-	void pobieranie_pliku(char *adresURL,const char nazwaPliku[100]);
-
+	long* pobieranie_pliku(std::string numer_tabel, std::string data, const char nazwa_pliku[100]);
+	void pobierz_pliki();
 };
 
 #endif /* POBIERANIE_H_ */

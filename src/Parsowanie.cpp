@@ -15,6 +15,8 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
+#include <string>
+#include <sstream>
 using namespace std;
 int Parsowanie::znajdz_wartosc_xml(char* linia, string &wartosc, string fraza_poczatkowa)
 {
@@ -40,7 +42,7 @@ int Parsowanie::znajdz_wartosc_xml(char* linia, string &wartosc, string fraza_po
 	return wartosc.length();
 }
 
-Parsowanie::Parsowanie() {
+Parsowanie::Parsowanie(): stop(false){
 	// TODO Auto-generated constructor stub
 
 }
@@ -49,75 +51,110 @@ Parsowanie::~Parsowanie() {
 	// TODO Auto-generated destructor stub
 }
 
-void Parsowanie::parsuj_plik(string nazwa_pliku_do_sparsowania, string nazwa_pliku_do_zapisu, list<string>& lista_walut,list<string>& lista_znalezionych_walut,list<string>& lista_nieznalezionych_walut, vector<Waluta>& tablica_walut)
+void Parsowanie::parsuj_plik(string nazwa_pliku, list<string>& kody_walut, vector<Waluta>& tablica_walut)
 {
 
-	fstream plik;
-	fstream plik2;
-	plik.open(nazwa_pliku_do_sparsowania.c_str(), ios::in);
-	plik2.open(nazwa_pliku_do_zapisu.c_str(),ios::out);
-	while(tablica_walut.size()!=lista_znalezionych_walut.size())
+	ifstream plik;
+	char zmienna[255];
+	plik.open(nazwa_pliku.c_str());
+	while(kody_walut.size()!=0 && !stop)
 	{
-		znajdz_jedna_walute(plik, lista_walut, lista_nieznalezionych_walut, lista_znalezionych_walut, tablica_walut);
+		//cout<<"wykonuje petle"<<endl;
+		znajdz_jedna_walute(plik, kody_walut, tablica_walut);
 	}
 	plik.close();
-	plik2.close();
 }
-int Parsowanie::znajdz_jedna_walute(fstream& plik, list<string>& lista_szukanych_walut, list<string>& lista_nieznalezionych_walut,list<string>& lista_znalezionych_walut, vector<Waluta> &wektor_walut)
+
+int Parsowanie::znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, vector<Waluta> &wektor_walut)
 {
-
+	char linia[255];
+	plik.getline(linia, 255);
 	int licznik=0;
-	string linia;
-	char* linia2;
-	string nazwa;
-	string nazwa_waluty;
+	std::string nazwa_waluty;
+	std::string wartosc;
 	float kurs_sredni1;
-	string przelicznik;
-	int przelicznik1;
+	float przelicznik1;
 	string kod_waluty;
-	string kurs_sredni;
-	size_t znalezione;
-	while(!plik.eof() || licznik!=4)
+	while(!plik.eof() && licznik!=15)
 	{
-		getline(plik, linia);
-		linia2 = (char*) linia.c_str();
-		if (znajdz_wartosc_xml(linia2,nazwa, "<nazwa_waluty>"))
+		wartosc.clear();
+		plik.getline(linia, 255);
+		if (znajdz_wartosc_xml(linia, wartosc, "<nazwa_waluty>"))
 		{
-			nazwa_waluty=nazwa;
-			while(find(lista_szukanych_walut.begin(),lista_nieznalezionych_walut.end(),nazwa_waluty)==lista_szukanych_walut.end())
-			{
-				getline(plik, linia);
-				linia2 = (char*) linia.c_str();
-				znajdz_wartosc_xml(linia2,nazwa, "<nazwa_waluty>");
-				if (plik.eof())
-					return 1;
-			}
-			licznik++;
+			nazwa_waluty=wartosc;
+			licznik=licznik | 1;
 
 		}
-		else if (znajdz_wartosc_xml(linia2, przelicznik, "<przelicznik>"))
+		else if (znajdz_wartosc_xml(linia, wartosc, "<przelicznik>"))
 		{
-			przelicznik1=atof(przelicznik.c_str());
-			licznik++;
+			przelicznik1=atof(wartosc.c_str());
+			licznik=licznik | 2;
 		}
-		else if (znajdz_wartosc_xml(linia2, kod_waluty, "<kod_waluty>"))
+		else if (znajdz_wartosc_xml(linia, wartosc, "<kod_waluty>"))
 		{
-			licznik++;
+			if(find(kody_walut.begin(),kody_walut.end(),wartosc)!=kody_walut.end())
+			{
+
+				kod_waluty = wartosc;
+				licznik=licznik | 4;
+			}
+
 		}
-		else if (znajdz_wartosc_xml(linia2, kurs_sredni, "<kurs_sredni>"))
+		else if (znajdz_wartosc_xml(linia, wartosc, "<kurs_sredni>"))
 		{
-			kurs_sredni1=(float)atof(kurs_sredni.c_str());
-			licznik++;
+			wartosc.replace(wartosc.find(","),1,".");
+			kurs_sredni1=(float)atof(wartosc.c_str());
+			if ((licznik & 4) == 4)
+			{
+				//cout<<wartosc<<endl;
+				licznik=licznik | 8;
+
+			}
 		}
 
 	}
-	if (licznik==4)
+	if (licznik==15)
 	{
-		lista_nieznalezionych_walut.remove(nazwa_waluty);
-		wektor_walut.push_back(Waluta(nazwa_waluty,przelicznik1,kod_waluty,kurs_sredni1));
-		lista_znalezionych_walut.push_back(nazwa_waluty);
+		kody_walut.remove(nazwa_waluty);
+		//cout<<"znalazlem "<<nazwa_waluty<<" "<<kod_waluty<<" "<<kurs_sredni1<<" "<<przelicznik1<<endl;
+		wektor_walut.push_back(Waluta(nazwa_waluty,przelicznik1,kod_waluty ,kurs_sredni1));
 		return 0;
 	}
-
+	if(plik.eof())
+	{
+		this->stop=true;
+	}
 	return 1;
+}
+
+string Parsowanie::zapisz_wartosc_xml(string znacznik, string wartosc)
+{
+	string wynik= znacznik;
+	wynik.append(wartosc);
+	wynik.append(znacznik.insert(1,"/"));
+	return wynik;
+}
+
+string to_string(float numer)
+{
+	std::ostringstream ss;
+	ss << numer;
+	std::string s(ss.str());
+	return s;
+}
+
+void Parsowanie::zapis_do_pliku_z_dnia(string name, vector<Waluta>& vector_walut)
+{
+	ofstream plik;
+	plik.open(name.c_str());
+	for (int i=0; i<vector_walut.size(); ++i)
+	{
+		plik<<zapisz_wartosc_xml("<nazwa_waluty>",vector_walut.at(i).get_nazwa_waluty())<<endl;
+		plik<<zapisz_wartosc_xml("<kod_waluty>",vector_walut.at(i).get_kod_waluty())<<endl;
+		plik<<zapisz_wartosc_xml("<przelicznik>", to_string(vector_walut.at(i).get_przelicznik()))<<endl;
+		plik<<zapisz_wartosc_xml("<kurs_sredni>", to_string(vector_walut.at(i).get_kurs_sredni()))<<endl;
+		plik<<endl;
+	}
+	plik.close();
+
 }
