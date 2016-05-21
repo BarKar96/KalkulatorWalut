@@ -14,13 +14,24 @@
 #include <curl/curl.h>
 #include "Pobieranie.h"
 #include "Parsowanie.h"
+#include "NazwyPlikowNBP.h"
 using namespace std;
 
 int main()
 {
-
+	list<NazwyPlikowNBP> lista_plikow;
 	Pobieranie z;
-	z.pobierz_pliki();
+	Parsowanie a;
+	//z.pobieranie_pliku("a084z160502",3);
+	z.pobierz_sciezki();
+	a.parsuj_sciezki();
+	z.utworz_liste_plikow(lista_plikow);
+	for (list<NazwyPlikowNBP>::iterator it=lista_plikow.begin(); it!=lista_plikow.end(); ++it)
+	{
+		cout << (*it).pobierz_date()<<" "<<endl;
+		//dobra to teraz mam zrobic funkcje scagnij x plikow?
+		//prawie, daj mi jakies 5 min
+	}
 //	list<string> lista_walut;
 //	lista_walut.push_back("USD");
 //	lista_walut.push_back("GBP");

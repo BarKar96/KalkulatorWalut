@@ -4,7 +4,7 @@
  *  Created on: May 1, 2016
  *      Author: bartek
  */
-
+#include "NazwyPlikowNBP.h"
 #include "Pobieranie.h"
 #include <iostream>
 #include <fstream>
@@ -14,6 +14,7 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
+#include <list>
 
 using namespace std;
 size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
@@ -21,9 +22,9 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
     size_t written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
+
 Pobieranie::Pobieranie()
 {
-	// TODO Auto-generated constructor stub
 
 }
 
@@ -31,25 +32,34 @@ Pobieranie::~Pobieranie()
 {
 	// TODO Auto-generated destructor stub
 }
-long* Pobieranie::pobieranie_pliku(string numer_tabeli,string data,const char nazwaPliku[100])
+long* Pobieranie::pobieranie_pliku(list<string> lista_plikow)
 {
 
 	CURL *curl;
 	FILE *fp;
 	CURLcode res;
-	string url="http://www.nbp.pl/kursy/xml/a";
-	url+=numer_tabeli;
-	url+="z";
-	url+=data;
-	url+=".xml";
-	//cout << url;
+
+	string url="http://www.nbp.pl/kursy/xml/.xml";
+
+
+
 	char outfilename[100];
-	strcpy(outfilename,nazwaPliku);
+
+	string nazwa_pliku="plik.txt";
+	ostringstream ss;
+	//ss<<numer_pliku;
+	string str;
+	str=ss.str();
+	nazwa_pliku.insert(4,str);
+
+
+	strcpy(outfilename,nazwa_pliku.c_str());
+
 	curl = curl_easy_init();
 	long *responce;
+
 	if (curl)
 	{
-
 		fp = fopen(outfilename, "w");
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -67,43 +77,67 @@ long* Pobieranie::pobieranie_pliku(string numer_tabeli,string data,const char na
 	return responce;
 
 }
-void Pobieranie::pobierz_pliki()
+void Pobieranie::pobierz_sciezki()
 {
-	string numer_tabelki="005";
-	int numer_tabeli;
-	numer_tabeli=atof(numer_tabelki.c_str());
+	CURLcode res;
+		CURL *curl;
+		FILE *fp;
+		char outfilename[100];
+		strcpy(outfilename, "kursy.txt");
+		string url="http://www.nbp.pl/kursy/xml/dir.txt";
+		curl = curl_easy_init();
+		long *responce;
 
-	cout << "numer tabeli:"<<numer_tabeli<<endl;
-	ostringstream ss;
-//	ss<<numer_tabeli;
-//	cout << ss.str();
-	string data="160111";
-	long *responce;
-	int i=0;
-	//while (i!=30)
-	//{
-		responce=pobieranie_pliku(numer_tabelki,data,"plik.txt");
-		//cout <<*responce;
-		if ((*responce)==200)
+		if (curl)
 		{
-			if(numer_tabeli<10)
-			{
-				numer_tabeli++;
-				ss<<numer_tabeli;
-				numer_tabelki="00"+ss.str();
-				cout << numer_tabelki;
-			}
-			if(numer_tabeli>9 && numer_tabeli<100)
-			{
-			numer_tabeli++;
-			ss << numer_tabeli;
-			numer_tabelki = "0" + ss.str();
-			cout << numer_tabelki;
-			}
-			i++;
-			//cout<<i;
-		}
-		//else
+			fp = fopen(outfilename, "w");
+			curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+			res = curl_easy_perform(curl);
+			responce = new long;
+			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, responce);
+			//cout<<*responce<<endl;
 
-	//}
+			/* always cleanup */
+			curl_easy_cleanup(curl);
+			fclose(fp);
+		}
 }
+
+void Pobieranie::utworz_liste_plikow(list<NazwyPlikowNBP>& lista_plikow)
+{
+	ifstream plik;
+	plik.open("sparsowane_kursy.txt");
+	string wyraz;
+	while(plik.good())
+	{
+		wyraz.clear();
+		plik>>wyraz;
+		if (wyraz.length()<11)
+		{
+			cout<<"blad podczas pobierania nazw plikow";
+			return;
+		}
+		lista_plikow.push_back(NazwyPlikowNBP(wyraz.substr(0,5), wyraz.substr(5,6)));
+
+
+	}
+	plik.close();
+}
+
+//Nastepny krok
+//1 funkcja ktora pobiera dane z ostanich x dni
+//2 funkcja ktora pobiera dane z danego miesiaca z roku to juz bylaby przeginka
+
+//3 usprawnic funkcje tak zeby na poczatku sprawdzila czy juz czasem tych danych nie sciagnela na dysk
+//w przypadku jak sciagnela to wczytac te z dysku jak nie to sciagnac
+
+//4 zrobic prosta klase UI w ktorej w whilu dasz uzytkownikowi wybrac co masz przedstawic
+// pomysl jakie opcje poki co mozesz mu wyswietlic
+//5 zrob funkcje srednia dajaca srednia np dla danego miesiaca
+
+//ok,
+
+
+

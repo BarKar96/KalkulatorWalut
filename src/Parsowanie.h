@@ -27,6 +27,7 @@ public:
 	void pobierz_waluty_z_pliku(list<string> lista_walut, vector<Waluta>& tablica_walut);
 	int znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, vector<Waluta> &wektor_walut);
 	void zapis_do_pliku_z_dnia(string name, vector<Waluta> &vector_walut);
+	void parsuj_sciezki();
 };
 
 #endif /* PARSOWANIE_H_ */

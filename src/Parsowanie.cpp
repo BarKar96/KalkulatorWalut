@@ -158,3 +158,25 @@ void Parsowanie::zapis_do_pliku_z_dnia(string name, vector<Waluta>& vector_walut
 	plik.close();
 
 }
+void Parsowanie::parsuj_sciezki()
+{
+
+
+	string tekst;
+	ifstream i("kursy.txt");
+	ofstream o("sparsowane_kursy.txt");
+	i>>tekst;
+	while(!i.eof() && tekst.length()>0)
+	{
+
+		if(tekst[0]=='a')
+		{
+			o<<tekst<<endl;
+		}
+		i>>tekst;
+	}
+
+
+	i.close();
+	o.close();
+}

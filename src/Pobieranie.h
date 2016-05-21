@@ -8,12 +8,17 @@
 #ifndef POBIERANIE_H_
 #define POBIERANIE_H_
 #include <string>
-class Pobieranie {
+#include <list>
+#include "NazwyPlikowNBP.h"
+class Pobieranie
+{
 public:
 	Pobieranie();
 	virtual ~Pobieranie();
-	long* pobieranie_pliku(std::string numer_tabel, std::string data, const char nazwa_pliku[100]);
+	long* pobieranie_pliku(std::list<std::string> lista_plikow);
 	void pobierz_pliki();
+	void pobierz_sciezki();
+	void utworz_liste_plikow(std::list<NazwyPlikowNBP>& lista_plikow);
 };
 
 #endif /* POBIERANIE_H_ */
