@@ -16,6 +16,7 @@
 #include <sstream>
 #include <list>
 
+
 using namespace std;
 size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
@@ -32,32 +33,20 @@ Pobieranie::~Pobieranie()
 {
 	// TODO Auto-generated destructor stub
 }
-long* Pobieranie::pobieranie_pliku(list<string> lista_plikow)
+long* Pobieranie::pobieranie_pliku(string koncowka_url)
 {
-
 	CURL *curl;
 	FILE *fp;
 	CURLcode res;
-
 	string url="http://www.nbp.pl/kursy/xml/.xml";
-
-
-
 	char outfilename[100];
+	string nazwa_pliku=koncowka_url;
 
-	string nazwa_pliku="plik.txt";
-	ostringstream ss;
-	//ss<<numer_pliku;
-	string str;
-	str=ss.str();
-	nazwa_pliku.insert(4,str);
-
+	url.insert(28,koncowka_url);
 
 	strcpy(outfilename,nazwa_pliku.c_str());
-
 	curl = curl_easy_init();
 	long *responce;
-
 	if (curl)
 	{
 		fp = fopen(outfilename, "w");
@@ -68,14 +57,12 @@ long* Pobieranie::pobieranie_pliku(list<string> lista_plikow)
 		responce = new long;
 		curl_easy_getinfo(curl,CURLINFO_RESPONSE_CODE, responce);
 		//cout<<*responce<<endl;
-
 		/* always cleanup */
 		curl_easy_cleanup(curl);
 		fclose(fp);
 	}
 
 	return responce;
-
 }
 void Pobieranie::pobierz_sciezki()
 {
@@ -112,7 +99,7 @@ void Pobieranie::utworz_liste_plikow(list<NazwyPlikowNBP>& lista_plikow)
 	string wyraz;
 	while(plik.good())
 	{
-		wyraz.clear();
+
 		plik>>wyraz;
 		if (wyraz.length()<11)
 		{
@@ -126,6 +113,40 @@ void Pobieranie::utworz_liste_plikow(list<NazwyPlikowNBP>& lista_plikow)
 	plik.close();
 }
 
+void Pobieranie::pobierz_dane_z_x_dni(int x,list<NazwyPlikowNBP> lista_plikow)
+{
+
+	Pobieranie temp;
+	int i=0;
+	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
+	{
+		if(i<x)
+		{
+			temp.pobieranie_pliku((*it).pobierz_nazwe());
+		}
+		else
+			break;
+		i++;
+	}
+}
+void Pobieranie::pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPlikowNBP> lista_plikow)
+{
+	Pobieranie temp;
+	string sprawdz_miesiac;
+
+
+	for(list<NazwyPlikowNBP>::iterator it = lista_plikow.begin();it!=lista_plikow.end(); it++)
+	{
+		sprawdz_miesiac=(*it).pobierz_date().substr(2,2);
+		if(!strcmp(sprawdz_miesiac.c_str(),miesiac.c_str()))
+		{
+			temp.pobieranie_pliku((*it).pobierz_nazwe());
+
+		}
+		it++;
+
+	}
+}
 //Nastepny krok
 //1 funkcja ktora pobiera dane z ostanich x dni
 //2 funkcja ktora pobiera dane z danego miesiaca z roku to juz bylaby przeginka

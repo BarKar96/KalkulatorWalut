@@ -15,10 +15,11 @@ class Pobieranie
 public:
 	Pobieranie();
 	virtual ~Pobieranie();
-	long* pobieranie_pliku(std::list<std::string> lista_plikow);
-	void pobierz_pliki();
+	long* pobieranie_pliku(std::string koncowka_url);
 	void pobierz_sciezki();
 	void utworz_liste_plikow(std::list<NazwyPlikowNBP>& lista_plikow);
+	void pobierz_dane_z_x_dni(int x, list<NazwyPlikowNBP> lista_plikow);
+	void pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPlikowNBP> lista_plikow);
 };
 
 #endif /* POBIERANIE_H_ */
