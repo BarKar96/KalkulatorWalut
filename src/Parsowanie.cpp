@@ -106,7 +106,6 @@ int Parsowanie::znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, ve
 			kurs_sredni1=(float)atof(wartosc.c_str());
 			if ((licznik & 4) == 4)
 			{
-				cout<<wartosc<<endl;
 				licznik=licznik | 8;
 
 			}
@@ -116,7 +115,6 @@ int Parsowanie::znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, ve
 	if (licznik==15)
 	{
 		kody_walut.remove(nazwa_waluty);
-		cout<<"znalazlem "<<nazwa_waluty<<" "<<kod_waluty<<" "<<kurs_sredni1<<" "<<przelicznik1<<endl;
 		wektor_walut.push_back(Waluta(nazwa_waluty,przelicznik1,kod_waluty ,kurs_sredni1));
 		return 0;
 	}
@@ -157,4 +155,27 @@ void Parsowanie::zapis_do_pliku_z_dnia(string name, vector<Waluta>& vector_walut
 	}
 	plik.close();
 
+}
+
+void Parsowanie::parsuj_sciezki()
+{
+
+
+	string tekst;
+	ifstream i("kursy.txt");
+	ofstream o("sparsowane_kursy.txt");
+	i>>tekst;
+	while(!i.eof() && tekst.length()>0)
+	{
+
+		if(tekst[0]=='a')
+		{
+			o<<tekst<<endl;
+		}
+		i>>tekst;
+	}
+
+
+	i.close();
+	o.close();
 }

@@ -44,3 +44,8 @@ float Waluta::get_kurs_sredni()
 {
 	return kurs_sredni;
 }
+float Waluta::srednia_wartosc()
+{
+	float wartosc=0;
+	return wartosc;
+}
