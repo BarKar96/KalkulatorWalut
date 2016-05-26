@@ -20,6 +20,7 @@ public:
 	void utworz_liste_plikow(std::list<NazwyPlikowNBP>& lista_plikow);
 	void pobierz_dane_z_x_dni(int x, list<NazwyPlikowNBP> lista_plikow);
 	void pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPlikowNBP> lista_plikow);
+	bool sprawdz_czy_plik_jest_sciagniety(NazwyPlikowNBP &obiekt);
 };
 
 #endif /* POBIERANIE_H_ */

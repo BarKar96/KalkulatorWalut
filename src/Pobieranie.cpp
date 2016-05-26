@@ -66,7 +66,7 @@ long* Pobieranie::pobieranie_pliku(string koncowka_url)
 }
 void Pobieranie::pobierz_sciezki()
 {
-	CURLcode res;
+		CURLcode res;
 		CURL *curl;
 		FILE *fp;
 		char outfilename[100];
@@ -112,15 +112,21 @@ void Pobieranie::utworz_liste_plikow(list<NazwyPlikowNBP>& lista_plikow)
 	}
 	plik.close();
 }
-
+template <class ReverseIterator>
+typename ReverseIterator::iterator_type make_forward(ReverseIterator rit)
+{
+    return --(rit.base());
+}
 void Pobieranie::pobierz_dane_z_x_dni(int x,list<NazwyPlikowNBP> lista_plikow)
 {
 
 	Pobieranie temp;
 	int i=0;
+	list<NazwyPlikowNBP>::iterator wsk;
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
-		if(i<x)
+		wsk=it.base();
+		if(i<x && sprawdz_czy_plik_jest_sciagniety(*wsk)==0)
 		{
 			temp.pobieranie_pliku((*it).pobierz_nazwe());
 		}
@@ -138,7 +144,7 @@ void Pobieranie::pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPl
 	for(list<NazwyPlikowNBP>::iterator it = lista_plikow.begin();it!=lista_plikow.end(); it++)
 	{
 		sprawdz_miesiac=(*it).pobierz_date().substr(2,2);
-		if(!strcmp(sprawdz_miesiac.c_str(),miesiac.c_str()))
+		if(!strcmp(sprawdz_miesiac.c_str(),miesiac.c_str()) && sprawdz_czy_plik_jest_sciagniety(*it)==0)
 		{
 			temp.pobieranie_pliku((*it).pobierz_nazwe());
 
@@ -146,6 +152,22 @@ void Pobieranie::pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPl
 		it++;
 
 	}
+}
+bool Pobieranie::sprawdz_czy_plik_jest_sciagniety(NazwyPlikowNBP &obiekt)
+{
+	fstream plik;
+	obiekt.pobierz_nazwe();
+	plik.open((obiekt).pobierz_nazwe().c_str(),ios::in);
+	if(plik.good())
+	{
+
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+	plik.close();
 }
 //Nastepny krok
 //1 funkcja ktora pobiera dane z ostanich x dni

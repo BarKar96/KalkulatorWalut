@@ -29,7 +29,7 @@ int main()
 	a.parsuj_sciezki();
 	z.utworz_liste_plikow(lista_plikow);
 	cout.flush();
-//	z.pobierz_dane_z_x_dni(11,lista_plikow);
+	z.pobierz_dane_z_x_dni(4,lista_plikow);
 //	z.pobierz_dane_z_ostatniego_miesiaca("04",lista_plikow);
 //	list<string> lista_walut;
 //	lista_walut.push_back("USD");
