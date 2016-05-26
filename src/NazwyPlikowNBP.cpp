@@ -13,7 +13,7 @@ NazwyPlikowNBP::NazwyPlikowNBP(string przedrostek, string data): data(data), prz
 
 std::string NazwyPlikowNBP::pobierz_nazwe()
 {
-	return przedrostek.append(data);
+	return przedrostek + data;
 }
 
 NazwyPlikowNBP::~NazwyPlikowNBP() {

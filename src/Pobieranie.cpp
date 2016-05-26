@@ -126,15 +126,17 @@ void Pobieranie::pobierz_dane_z_x_dni(int x,list<NazwyPlikowNBP> lista_plikow)
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
 		NazwyPlikowNBP wsk = *it;
-		if(i<x && sprawdz_czy_plik_jest_sciagniety(wsk)==0)
+		if(i == x)
+			break;
+		if(sprawdz_czy_plik_jest_sciagniety(wsk)==0)
 		{
-			temp.pobieranie_pliku((*it).pobierz_nazwe());
+			temp.pobieranie_pliku(wsk.pobierz_nazwe());
 			cout<<"Pobieram plik"<<endl;
 		}
 		else
 		{
 			cout<<"plik z danego dnia istnieje"<<endl;;
-			break;
+
 		}
 		i++;
 	}
