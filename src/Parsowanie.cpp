@@ -7,6 +7,7 @@
 
 #include "Parsowanie.h"
 #include "Waluta.h"
+#include "NazwyPlikowNBP.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -145,7 +146,7 @@ void Parsowanie::zapis_do_pliku_z_dnia(string name, vector<Waluta>& vector_walut
 {
 	ofstream plik;
 	plik.open(name.c_str());
-	for (int i=0; i<vector_walut.size(); ++i)
+	for (unsigned int i=0; i<vector_walut.size(); ++i)
 	{
 		plik<<zapisz_wartosc_xml("<nazwa_waluty>",vector_walut.at(i).get_nazwa_waluty())<<endl;
 		plik<<zapisz_wartosc_xml("<kod_waluty>",vector_walut.at(i).get_kod_waluty())<<endl;
@@ -178,4 +179,19 @@ void Parsowanie::parsuj_sciezki()
 
 	i.close();
 	o.close();
+}
+void Parsowanie::parsuj_30_ostatnich_plikow(list<vector<Waluta> >& lista_wektorow,list<NazwyPlikowNBP>& lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
+{
+	int x=0;
+	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
+	{
+		if(x>=30)
+		{
+			break;
+		}
+		NazwyPlikowNBP wsk = *it;
+		Parsowanie::parsuj_plik(wsk.pobierz_nazwe(),kody_walut,tablica_walut);
+		lista_wektorow.push_back(tablica_walut);
+		x++;
+	}
 }

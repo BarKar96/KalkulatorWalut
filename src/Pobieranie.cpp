@@ -121,10 +121,11 @@ void Pobieranie::pobierz_dane_z_x_dni(int x,list<NazwyPlikowNBP> lista_plikow)
 {
 
 	Pobieranie temp;
-	int i=0;
+	int i=-1;
 
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
+
 		NazwyPlikowNBP wsk = *it;
 		if(i == x)
 			break;
@@ -155,7 +156,7 @@ void Pobieranie::pobierz_dane_z_ostatniego_miesiaca(string miesiac, list<NazwyPl
 			temp.pobieranie_pliku((*it).pobierz_nazwe());
 
 		}
-		it++;
+
 
 	}
 }
