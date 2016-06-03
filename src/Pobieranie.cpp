@@ -167,14 +167,15 @@ bool Pobieranie::sprawdz_czy_plik_jest_sciagniety(NazwyPlikowNBP &obiekt)
 	plik.open((obiekt).pobierz_nazwe().c_str(),ios::in);
 	if(plik.good())
 	{
-
+		plik.close();
 		return 1;
 	}
 	else
 	{
+		plik.close();
 		return 0;
 	}
-	plik.close();
+
 }
 //Nastepny krok
 //1 funkcja ktora pobiera dane z ostanich x dni

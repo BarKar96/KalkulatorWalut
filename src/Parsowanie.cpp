@@ -56,7 +56,6 @@ void Parsowanie::parsuj_plik(string nazwa_pliku, list<string>& kody_walut, vecto
 {
 
 	ifstream plik;
-	char zmienna[255];
 	plik.open(nazwa_pliku.c_str());
 	while(kody_walut.size()!=0 && !stop)
 	{
@@ -180,18 +179,28 @@ void Parsowanie::parsuj_sciezki()
 	i.close();
 	o.close();
 }
-void Parsowanie::parsuj_30_ostatnich_plikow(list<vector<Waluta> >& lista_wektorow,list<NazwyPlikowNBP>& lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
+
+void Parsowanie::parsuj_30_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
 {
+	cout << "dlugosc listy: " << lista_plikow.size()<<endl;
 	int x=0;
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
+		//cout << (*it).pobierz_nazwe();
+		cout.flush();
 		if(x>=30)
 		{
 			break;
 		}
 		NazwyPlikowNBP wsk = *it;
-		Parsowanie::parsuj_plik(wsk.pobierz_nazwe(),kody_walut,tablica_walut);
-		lista_wektorow.push_back(tablica_walut);
+	//	cout << wsk.pobierz_nazwe();
+		string nazwa_pliku=it->pobierz_nazwe();
+		parsuj_plik(nazwa_pliku, kody_walut, tablica_walut);
+		DataIWaluty obiekt;
+		obiekt.data=it->pobierz_date();
+		obiekt.wektor_walut=tablica_walut;
+		kursy_walut.push_back(obiekt);
 		x++;
 	}
 }
+
