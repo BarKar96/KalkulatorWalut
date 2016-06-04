@@ -26,6 +26,9 @@ public:
 	void pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut,list<string> lista_walut, int wiersze);
 	void wyswietl_kursy_z_x_dni(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut);
 	void wyswietl_kursy_walut_z_dnia(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut,string data);
+	void linia_trendu(list<DataIWaluty>& kursy_walut, string kod_waluty, float& srednia_arytmetyczna, float& wartosc_linii_trendu,float& aktualny_kurs);
+	bool czy_wymienic(list<DataIWaluty> kursy_walut, float srednia_arytmetyczna, float wartosc_linii_trendu, float& aktualny_kurs);
+	void pokaz_czy_wymienic(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut);
 };
 
 #endif /* SRC_UI_H_ */

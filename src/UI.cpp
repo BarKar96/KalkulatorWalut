@@ -174,3 +174,95 @@ void UI::wyswietl_kursy_walut_z_dnia(list<NazwyPlikowNBP>& lista_plikow, int x,l
 	pokaz_waluty_z_dnia(kursy_walut,data);
 
 }
+void UI::linia_trendu(list<DataIWaluty>& kursy_walut, string kod_waluty, float& srednia_arytmetyczna, float& wartosc_linii_trendu, float& aktualny_kurs)
+{
+	int licznik=30;
+
+	float pierwszy_krok=0;
+	float srednia_arytmetyczna_t=0;
+	float srednia_arytemtyczna_y=0;
+		for (list<DataIWaluty>::iterator i = kursy_walut.begin(); i != kursy_walut.end(); i++)
+		{
+
+			for (vector<Waluta>::iterator j = i->wektor_walut.begin(); j != i->wektor_walut.end(); ++j)
+			{
+
+				if(j->get_kod_waluty()==kod_waluty)
+				{
+					pierwszy_krok+=(j->get_kurs_sredni()*licznik);
+					srednia_arytemtyczna_y+=j->get_kurs_sredni();
+					if(licznik==30)
+					{
+						aktualny_kurs=j->get_kurs_sredni();
+					}
+				}
+			}
+			licznik--;
+			if(licznik==0)
+				break;
+		}
+	pierwszy_krok=pierwszy_krok/30;
+	//cout << pierwszy_krok;
+	for (int i=1; i<=30; i++)
+	{
+		srednia_arytmetyczna_t+=i;
+	}
+	srednia_arytmetyczna_t/=30;
+	//cout <<endl <<  srednia_arytmetyczna_t;
+	srednia_arytemtyczna_y/=30;
+	//cout << endl << srednia_arytemtyczna_y;
+	float pom=srednia_arytemtyczna_y*srednia_arytmetyczna_t;
+	float gorna_czesc=pierwszy_krok-pom;
+	cout <<endl<< gorna_czesc;
+	////////////////////////////////////////////////
+	float tab[30];
+	for (int i=0; i<30; i++)
+	{
+		tab[i]=i+1;
+	}
+
+	for (int i=0; i<30; i++)
+	{
+		tab[i]=tab[i]-srednia_arytmetyczna_t;
+
+	}
+	for (int i=0; i<30; i++)
+	{
+		tab[i]=tab[i]*tab[i];
+		//cout << endl << tab[i] << " ";
+	}
+	float dolna_czesc=0;
+	for (int i=0; i<30; i++)
+	{
+		dolna_czesc+=tab[i];
+	}
+	dolna_czesc/=30;
+	//cout << dolna_czesc;
+
+	float wynik=0;
+	//cout << endl << "gorna: "<< gorna_czesc <<endl<< "dolna: "<<dolna_czesc<<endl;
+	wynik=(gorna_czesc/dolna_czesc);
+	//cout << wynik;
+	srednia_arytmetyczna=srednia_arytemtyczna_y;
+	wartosc_linii_trendu=wynik;
+}
+bool UI::czy_wymienic(list<DataIWaluty> kursy_walut, float srednia_arytmetyczna, float wartosc_linii_trendu,float& aktualny_kurs)
+{
+	if (wartosc_linii_trendu>0 && aktualny_kurs>srednia_arytmetyczna)
+	{
+		return true;
+	}
+	else
+		return false;
+}
+void UI::pokaz_czy_wymienic(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut)
+{
+	Pobieranie pobierak;
+	Parsowanie par;
+	pobierak.pobierz_sciezki();
+	par.parsuj_sciezki();
+	pobierak.utworz_liste_plikow(lista_plikow);
+	pobierak.pobierz_dane_z_x_dni(30,lista_plikow);
+	par.parsuj_x_ostatnich_plikow(kursy_walut,lista_plikow,lista_walut,tablica_walut);
+
+}
