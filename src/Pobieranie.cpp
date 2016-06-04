@@ -110,6 +110,7 @@ void Pobieranie::utworz_liste_plikow(list<NazwyPlikowNBP>& lista_plikow)
 
 
 	}
+	lista_plikow.pop_back();
 	plik.close();
 }
 template <class ReverseIterator>
@@ -132,11 +133,11 @@ void Pobieranie::pobierz_dane_z_x_dni(int x,list<NazwyPlikowNBP> lista_plikow)
 		if(sprawdz_czy_plik_jest_sciagniety(wsk)==0)
 		{
 			temp.pobieranie_pliku(wsk.pobierz_nazwe());
-			cout<<"Pobieram plik"<<endl;
+			//cout<<"Pobieram plik"<<endl;
 		}
 		else
 		{
-			cout<<"plik z danego dnia istnieje"<<endl;;
+			//cout<<"plik z danego dnia istnieje"<<endl;;
 
 		}
 		i++;
@@ -177,18 +178,7 @@ bool Pobieranie::sprawdz_czy_plik_jest_sciagniety(NazwyPlikowNBP &obiekt)
 	}
 
 }
-//Nastepny krok
-//1 funkcja ktora pobiera dane z ostanich x dni
-//2 funkcja ktora pobiera dane z danego miesiaca z roku to juz bylaby przeginka
 
-//3 usprawnic funkcje tak zeby na poczatku sprawdzila czy juz czasem tych danych nie sciagnela na dysk
-//w przypadku jak sciagnela to wczytac te z dysku jak nie to sciagnac
-
-//4 zrobic prosta klase UI w ktorej w whilu dasz uzytkownikowi wybrac co masz przedstawic
-// pomysl jakie opcje poki co mozesz mu wyswietlic
-//5 zrob funkcje srednia dajaca srednia np dla danego miesiaca
-
-//ok,
 
 
 

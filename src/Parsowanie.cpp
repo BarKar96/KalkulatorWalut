@@ -52,10 +52,13 @@ Parsowanie::~Parsowanie() {
 	// TODO Auto-generated destructor stub
 }
 
-void Parsowanie::parsuj_plik(string nazwa_pliku, list<string>& kody_walut, vector<Waluta>& tablica_walut)
+void Parsowanie::parsuj_plik(string nazwa_pliku, list<string> &kody_walut, vector<Waluta>& tablica_walut)
 {
 
 	ifstream plik;
+	stop=0;
+	//cout<<"Parsowanie::parsuj_plik "<<nazwa_pliku<<" "<<kody_walut.size()<<" "<<stop<<endl;
+	tablica_walut.clear();
 	plik.open(nazwa_pliku.c_str());
 	while(kody_walut.size()!=0 && !stop)
 	{
@@ -180,14 +183,14 @@ void Parsowanie::parsuj_sciezki()
 	o.close();
 }
 
-void Parsowanie::parsuj_30_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
+void Parsowanie::parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
 {
-	cout << "dlugosc listy: " << lista_plikow.size()<<endl;
+	//cout << "dlugosc listy: " << lista_plikow.size()<<endl;
 	int x=0;
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
 		//cout << (*it).pobierz_nazwe();
-		cout.flush();
+		//cout.flush();
 		if(x>=30)
 		{
 			break;
@@ -198,9 +201,51 @@ void Parsowanie::parsuj_30_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list
 		parsuj_plik(nazwa_pliku, kody_walut, tablica_walut);
 		DataIWaluty obiekt;
 		obiekt.data=it->pobierz_date();
+		//cout << obiekt.data<<" ";
 		obiekt.wektor_walut=tablica_walut;
+//		for(vector<Waluta>::iterator i=tablica_walut.begin(); i!=tablica_walut.end(); i++)
+//			{
+//				cout << &(*i)<< " ";
+//				cout << i->get_kurs_sredni()<< " "<< it->pobierz_nazwe();
+//				cout << endl;
+//			}
 		kursy_walut.push_back(obiekt);
+
 		x++;
 	}
+
+}
+void Parsowanie::parsuj_z_miesiaca(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut, string miesiac)
+{
+	int x=0;
+	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
+		{
+			//cout<<it->pobierz_date().substr(2,2)<<" ";
+			//cout.flush();
+
+			NazwyPlikowNBP wsk = *it;
+		//	cout << wsk.pobierz_nazwe();
+			string nazwa_pliku=it->pobierz_nazwe();
+			if(it->pobierz_date().substr(2,2)==miesiac)
+			{
+
+				parsuj_plik(nazwa_pliku, kody_walut, tablica_walut);
+				DataIWaluty obiekt;
+				obiekt.data=it->pobierz_date();
+				//cout << obiekt.data<<" ";
+				obiekt.wektor_walut=tablica_walut;
+				kursy_walut.push_back(obiekt);
+			}
+
+	//		for(vector<Waluta>::iterator i=tablica_walut.begin(); i!=tablica_walut.end(); i++)
+	//			{
+	//				cout << &(*i)<< " ";
+	//				cout << i->get_kurs_sredni()<< " "<< it->pobierz_nazwe();
+	//				cout << endl;
+	//			}
+
+
+			x++;
+		}
 }
 

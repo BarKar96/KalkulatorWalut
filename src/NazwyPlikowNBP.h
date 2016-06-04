@@ -17,7 +17,7 @@ private:
 	string przedrostek;
 
 public:
-	NazwyPlikowNBP(string data, string przedrostel);
+	NazwyPlikowNBP(string data, string przedrostek);
 	virtual ~NazwyPlikowNBP();
 	string pobierz_nazwe();
 	string pobierz_date();
