@@ -60,10 +60,16 @@ void Parsowanie::parsuj_plik(string nazwa_pliku, list<string> &kody_walut, vecto
 	//cout<<"Parsowanie::parsuj_plik "<<nazwa_pliku<<" "<<kody_walut.size()<<" "<<stop<<endl;
 	tablica_walut.clear();
 	plik.open(nazwa_pliku.c_str());
-	while(kody_walut.size()!=0 && !stop)
+	list<string> kody_walut_temp;
+	kody_walut_temp = kody_walut;
+	while(kody_walut_temp.size()!=0 && !stop)
 	{
-		//cout<<"wykonuje petle"<<endl;
-		znajdz_jedna_walute(plik, kody_walut, tablica_walut);
+		cout<<"Parsowanie::parsuj_plik ";
+		for (list<string>::iterator i=kody_walut_temp.begin(); i!=kody_walut_temp.end(); ++i)
+			cout<<*i<<" ";
+		cout<<endl;
+		znajdz_jedna_walute(plik, kody_walut_temp, tablica_walut);
+
 	}
 	plik.close();
 }
@@ -117,7 +123,12 @@ int Parsowanie::znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, ve
 	}
 	if (licznik==15)
 	{
-		kody_walut.remove(nazwa_waluty);
+		cout<<"Parsowanie::znajdz_jedna_walute "<<nazwa_waluty<<endl;
+		kody_walut.remove(kod_waluty);
+		cout<<"Parsowanie::znajdz_jedna_walute ";
+				for (list<string>::iterator i=kody_walut.begin(); i!=kody_walut.end(); ++i)
+					cout<<*i<<" ";
+				cout<<endl;
 		wektor_walut.push_back(Waluta(nazwa_waluty,przelicznik1,kod_waluty ,kurs_sredni1));
 		return 0;
 	}
@@ -183,15 +194,15 @@ void Parsowanie::parsuj_sciezki()
 	o.close();
 }
 
-void Parsowanie::parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut)
+void Parsowanie::parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut, int x)
 {
 	//cout << "dlugosc listy: " << lista_plikow.size()<<endl;
-	int x=0;
+
 	for(list<NazwyPlikowNBP>::reverse_iterator it=lista_plikow.rbegin(); it!=lista_plikow.rend(); ++it)
 	{
 		//cout << (*it).pobierz_nazwe();
 		//cout.flush();
-		if(x>=30)
+		if(x==0)
 		{
 			break;
 		}
@@ -203,16 +214,21 @@ void Parsowanie::parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<
 		obiekt.data=it->pobierz_date();
 		//cout << obiekt.data<<" ";
 		obiekt.wektor_walut=tablica_walut;
-//		for(vector<Waluta>::iterator i=tablica_walut.begin(); i!=tablica_walut.end(); i++)
-//			{
-//				cout << &(*i)<< " ";
-//				cout << i->get_kurs_sredni()<< " "<< it->pobierz_nazwe();
-//				cout << endl;
-//			}
-		kursy_walut.push_back(obiekt);
+		for(vector<Waluta>::iterator i=obiekt.wektor_walut.begin(); i!=obiekt.wektor_walut.end(); i++)
+			{
+				cout <<  "Parsowanie::parsuj_x_ostatnich_plikow"<<endl;;
+				cout << i->get_kod_waluty();
+				cout << endl;
+			}
+		kursy_walut.push_front(obiekt);
 
-		x++;
+		x--;
 	}
+	for(vector<Waluta>::iterator i=tablica_walut.begin(); i!=tablica_walut.end(); i++)
+				{
+
+					cout <<"ten moment "<< i->get_kod_waluty()<< " ";
+				}
 
 }
 void Parsowanie::parsuj_z_miesiaca(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut, string miesiac)

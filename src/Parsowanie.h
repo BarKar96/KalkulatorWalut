@@ -29,7 +29,7 @@ public:
 	Parsowanie();
 	virtual ~Parsowanie();
 	void parsuj_plik(std::string nazwa_pliku, std::list<string> &kody_walut, std::vector<Waluta>& tablica_walut);
-	void parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut);
+	void parsuj_x_ostatnich_plikow(list<DataIWaluty>& kursy_walut, list<NazwyPlikowNBP> & lista_plikow, list<string>& kody_walut, vector<Waluta>& tablica_walut, int x);
 	void pobierz_waluty_z_pliku(list<string> lista_walut, vector<Waluta>& tablica_walut);
 	int znajdz_jedna_walute(ifstream& plik, list<string>& kody_walut, vector<Waluta> &wektor_walut);
 	void zapis_do_pliku_z_dnia(string name, vector<Waluta> &vector_walut);

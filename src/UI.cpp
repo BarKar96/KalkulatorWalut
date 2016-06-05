@@ -35,9 +35,10 @@ void UI::pokaz_aktualne_kursy(list<DataIWaluty> kursy_walut)
 	}
 
 }
-void UI::dodaj_walute_do_listy(list<string>& lista_walut, string kod)
+void UI::dodaj_walute_do_listy(list<string>& lista_walut, string& kod)
 {
 	lista_walut.push_back(kod);
+
 }
 void UI::pokaz_waluty_z_dnia(list<DataIWaluty> kursy_walut,string data)
 {
@@ -54,7 +55,7 @@ void UI::pokaz_waluty_z_dnia(list<DataIWaluty> kursy_walut,string data)
 			licznik++;
 			for (vector<Waluta>::iterator j=i->wektor_walut.begin(); j!=i->wektor_walut.end(); ++j)
 				{
-					cout << j->get_kod_waluty() << "  " << j->get_kurs_sredni();
+					cout << j->get_kod_waluty() << "  " << j->get_kurs_sredni()<< " PLN";
 					cout << endl;
 				}
 		}
@@ -66,7 +67,7 @@ void UI::pokaz_rokowania_na_podstawie_x_dni()
 {
 
 }
-void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, list<string> lista_walut, int wiersze=30)
+void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, int wiersze=30)
 {
 	//cout <<"kursy z x dni";
 	string dzien;
@@ -85,7 +86,7 @@ void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, list<string> lista_w
 		}
 		if (licznik==0)
 		{
-			for (unsigned int i=0; i<lista_walut.size()*11+12; i++)
+			for (unsigned int  j=0; j< i->wektor_walut.size()*11+12; j++)
 			{
 				cout << "-";
 			}
@@ -96,16 +97,16 @@ void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, list<string> lista_w
 			cout <<left << "DATA";
 			cout << "|";
 
-			for (unsigned int i=0; i<lista_walut.size(); i++)
+			for (vector<Waluta>::iterator it=i->wektor_walut.begin(); it!=i->wektor_walut.end(); ++it)
 			{
 				cout << "   ";
 				cout.width(7);
-				cout <<left << pom->get_kod_waluty();
+				cout <<left << it->get_kod_waluty();
 				cout << "|";
-				pom++;
+
 			}
 			cout << endl;
-			for (unsigned int i=0; i<lista_walut.size()*11+12; i++)
+			for (unsigned int  j=0; j< i->wektor_walut.size()*11+12; j++)
 			{
 				cout << "-";
 			}
@@ -123,7 +124,7 @@ void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, list<string> lista_w
 			cout <<" |  ";
 			cout.width(7);
 			cout << left << j->get_kurs_sredni();
-			if(licznik2==lista_walut.size())
+			if(licznik2==i->wektor_walut.size())
 			{
 				cout.width(2);
 				cout <<right<<"|";
@@ -132,10 +133,11 @@ void UI::pokaz_kursy_z_x_dni(list<DataIWaluty> kursy_walut, list<string> lista_w
 		licznik++;
 		cout << endl;
 	}
-	for (unsigned int i=0; i<lista_walut.size()*11+12; i++)
+	for (unsigned int  j=0; j< kursy_walut.begin()->wektor_walut.size()*11+12; j++)
 	{
 		cout << "-";
 	}
+	cout << endl;
 }
 void UI::wyswietl_kursy_z_x_dni(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut)
 {
@@ -145,8 +147,12 @@ void UI::wyswietl_kursy_z_x_dni(list<NazwyPlikowNBP>& lista_plikow, int x,list<D
 	par.parsuj_sciezki();
 	pobierak.utworz_liste_plikow(lista_plikow);
 	pobierak.pobierz_dane_z_x_dni(x,lista_plikow);
-	par.parsuj_x_ostatnich_plikow(kursy_walut,lista_plikow,lista_walut,tablica_walut);
-	pokaz_kursy_z_x_dni(kursy_walut,lista_walut,x);
+	par.parsuj_x_ostatnich_plikow(kursy_walut,lista_plikow,lista_walut,tablica_walut, x);
+	for (vector<Waluta>::iterator it=kursy_walut.begin()->wektor_walut.begin(); it!=kursy_walut.begin()->wektor_walut.end(); ++it)
+	{
+		cout<<" wyswietl_kursy_z_x_dni kursy walut : "<<it->get_kod_waluty()<<endl;
+	}
+	pokaz_kursy_z_x_dni(kursy_walut,x);
 
 }
 void UI::wyswietl_kursy_walut_z_dnia(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut,string data)
@@ -213,7 +219,7 @@ void UI::linia_trendu(list<DataIWaluty>& kursy_walut, string kod_waluty, float& 
 	//cout << endl << srednia_arytemtyczna_y;
 	float pom=srednia_arytemtyczna_y*srednia_arytmetyczna_t;
 	float gorna_czesc=pierwszy_krok-pom;
-	cout <<endl<< gorna_czesc;
+	//cout <<endl<< gorna_czesc;
 	////////////////////////////////////////////////
 	float tab[30];
 	for (int i=0; i<30; i++)
@@ -255,14 +261,41 @@ bool UI::czy_wymienic(list<DataIWaluty> kursy_walut, float srednia_arytmetyczna,
 	else
 		return false;
 }
-void UI::pokaz_czy_wymienic(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut)
+void UI::pokaz_czy_wymienic(list<NazwyPlikowNBP>& lista_plikow, int x,list<DataIWaluty>& kursy_walut, vector<Waluta>& tablica_walut,list<string>& lista_walut, string kod_waluty)
 {
 	Pobieranie pobierak;
 	Parsowanie par;
+	float srednia_arytmetyczna;
+	float trend;
+	float aktualny_kurs;
 	pobierak.pobierz_sciezki();
 	par.parsuj_sciezki();
 	pobierak.utworz_liste_plikow(lista_plikow);
 	pobierak.pobierz_dane_z_x_dni(30,lista_plikow);
-	par.parsuj_x_ostatnich_plikow(kursy_walut,lista_plikow,lista_walut,tablica_walut);
+	par.parsuj_x_ostatnich_plikow(kursy_walut,lista_plikow,lista_walut,tablica_walut, 30);
+	linia_trendu(kursy_walut,kod_waluty, srednia_arytmetyczna,trend,aktualny_kurs);
+	cout << "Aktualny kurs waluty "<<kod_waluty<<" to:  "<<aktualny_kurs<<" PLN"<<endl;
+	cout << "Srednia arytmetyczna wahań kursu na podstawie 30 dni to:  "<<srednia_arytmetyczna<<" PLN"<<endl;
+	if(czy_wymienic(kursy_walut, srednia_arytmetyczna, trend, aktualny_kurs)==true)
+	{
+		cout << "Wartosc waluty rosnie o:  "<<trend<<" PLN"<<"  na dzien"<<endl;
+	}
+	else
+	{
+		cout << "Wartosc waluty maleje o:  "<<trend<<" PLN"<<"  na dzien"<<endl;
+	}
+
+}
+void UI::usun_walute_z_listy(list<string>& lista_walut, string& kod)
+{
+
+	for (list<string>::iterator i=lista_walut.begin(); i!=lista_walut.end(); i++)
+	{
+		if ((*i)==kod)
+		{
+			lista_walut.erase(i);
+			break;
+		}
+	}
 
 }

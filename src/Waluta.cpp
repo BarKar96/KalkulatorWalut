@@ -16,7 +16,7 @@ Waluta::Waluta(std::string nazwa_waluty, int przelicznik, std::string kod_waluty
 	this->przelicznik=przelicznik;
 	this->kod_waluty=kod_waluty;
 	this->kurs_sredni=kurs_sredni;
-
+	std::cout<<"Waluta::Waluta "<<nazwa_waluty<<std::endl;
 }
 
 Waluta::~Waluta() {
